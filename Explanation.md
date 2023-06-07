@@ -47,3 +47,5 @@ By following the user story, the solution provides the desired outcome of allowi
 Approach and Rationale:
 
 In approaching the problem, the solution focuses on simplicity and effectiveness. It crawls only the home page instead of recursively crawling all internal links to keep the implementation manageable. Temporary storage in a database table and file-based operations enable the extraction, storage, and display of crawl results. The use of WordPress actions and scheduling via WordPress Cron ensures seamless integration with the WordPress environment.
+
+The chosen approach strikes a balance between functionality and maintainability. It leverages existing WordPress capabilities and APIs, making it compatible with WordPress 5.0 and above. The use of procedural code where appropriate and the adherence to OOP principles provide a structured and extensible solution. The technical decisions made prioritize practicality, performance, and ease of use, enabling the administrator to effectively analyze and improve the website's SEO rankings.
