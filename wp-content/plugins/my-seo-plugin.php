@@ -2,13 +2,16 @@
 
 namespace SEOCrawl;
 
-class MySEOPlugin {
-    public function __construct() {
+class MySEOPlugin
+{
+    public function __construct()
+    {
         add_action('admin_menu', array($this, 'registerMenuPage'));
         add_action('my_seo_plugin_hourly_crawl', array($this, 'runSEOcrawl'));
     }
 
-    public function registerMenuPage() {
+    public function registerMenuPage()
+    {
         add_menu_page(
             'SEO Crawl',
             'SEO Crawl',
@@ -20,7 +23,8 @@ class MySEOPlugin {
         );
     }
 
-    public function displaySettingsPage() {
+    public function displaySettingsPage()
+    {
         if (isset($_POST['crawl_trigger'])) {
             echo '<div class="updated"><p>Crawl triggered successfully!</p></div>';
             $this->runSEOcrawl();
@@ -57,7 +61,8 @@ class MySEOPlugin {
         <?php
     }
 
-    public function runSEOcrawl() {
+    public function runSEOcrawl()
+    {
         $this->deletePreviousCrawlResults();
         $this->deleteSitemapHTML();
         $home_url = get_home_url();
@@ -68,19 +73,22 @@ class MySEOPlugin {
         $this->generateSitemapHTML($internal_links);
     }
 
-    public function deletePreviousCrawlResults() {
+    public function deletePreviousCrawlResults()
+    {
         global $wpdb;
         $wpdb->query("TRUNCATE TABLE wp_links");
     }
 
-    public function deleteSitemapHTML() {
+    public function deleteSitemapHTML()
+    {
         $sitemap_file = ABSPATH . 'sitemap.html';
         if (file_exists($sitemap_file)) {
             unlink($sitemap_file);
         }
     }
 
-    public function extractInternalLinks($url) {
+    public function extractInternalLinks($url)
+    {
         $response = wp_remote_get($url);
         if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
             return array();
@@ -102,12 +110,14 @@ class MySEOPlugin {
         return $internal_links;
     }
 
-    public function isInternalLink($link) {
+    public function isInternalLink($link)
+    {
         $home_url = get_home_url();
         return strpos($link, $home_url) === 0;
     }
 
-    public function displayCrawlResults() {
+    public function displayCrawlResults()
+    {
         global $wpdb;
         $results = $wpdb->get_results("SELECT * FROM wp_links");
 
@@ -123,7 +133,8 @@ class MySEOPlugin {
         }
     }
 
-    public function storeCrawlResults($internal_links) {
+    public function storeCrawlResults($internal_links)
+    {
         global $wpdb;
         $wpdb->query("TRUNCATE TABLE wp_links");
 
@@ -142,12 +153,14 @@ class MySEOPlugin {
         }
     }
 
-    public function saveHomePageAsHTML($home_url) {
+    public function saveHomePageAsHTML($home_url)
+    {
         $html_content = '<html><head><title>Home Page</title></head><body><h1>Welcome to the Home Page</h1></body></html>';
         file_put_contents(ABSPATH . 'index.html', $html_content);
     }
 
-    public function generateSitemapHTML($internal_links) {
+    public function generateSitemapHTML($internal_links)
+    {
         // Create the sitemap content
         $sitemap_content = '<ul>';
         foreach ($internal_links as $link) {
@@ -160,7 +173,8 @@ class MySEOPlugin {
         file_put_contents($sitemap_file, $sitemap_content);
     }
 
-    public function scheduleSEOcrawl() {
+    public function scheduleSEOcrawl()
+    {
         // Schedule the crawl to run every hour using WordPress Cron
         if (!wp_next_scheduled('my_seo_plugin_hourly_crawl')) {
             wp_schedule_event(time(), 'hourly', 'my_seo_plugin_hourly_crawl');
